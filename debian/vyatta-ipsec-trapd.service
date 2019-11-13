@@ -1,0 +1,16 @@
+[Unit]
+Description=Vyatta IPsec trap daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/vyatta/sbin/ipsec-trapd.pl --background --pidfile=/var/run/ipsec-trapd.pid
+ExecStop=/bin/kill -s TERM $MAINPID
+# ExecReload=/bin/kill -s HUP $MAINPID
+PIDFile=/var/run/ipsec-trapd.pid
+# really necessary?
+GuessMainPID=no
+Restart=on-failure
+
+[Install]
+Alias=ipsec-trapd.service

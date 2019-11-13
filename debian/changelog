@@ -1,0 +1,5 @@
+vyatta-ipsec-trapd (0.0.13) unstable; urgency=medium
+
+  * DANOS Import master
+
+ -- Vyatta Package Maintainers <DL-vyatta-help@att.com>  Tue, 12 Nov 2019 12:46:34 -0800

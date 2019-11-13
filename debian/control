@@ -1,0 +1,26 @@
+Source: vyatta-ipsec-trapd
+Section: contrib/net
+Priority: optional
+Maintainer: Vyatta Package Maintainers <DL-vyatta-help@att.com>
+Build-Depends:
+ automake,
+ autotools-dev,
+ cpio,
+ debhelper (>= 9),
+ dh-systemd
+Standards-Version: 3.9.8
+
+Package: vyatta-ipsec-trapd
+Provides: vyatta-ipsec-trapd
+Architecture: all
+Depends:
+ libconfig-inifiles-perl,
+ libfile-slurp-perl,
+ libio-interface-perl,
+ libnet-snmp-perl,
+ lsb-base (>= 3.0-6),
+ perl (>= 5.12),
+ vyatta-mibs-misc,
+ ${misc:Depends}
+Description: Vyatta IPsec trap daemon.
+ This daemon sets up IPsec traps based on the user configuration.

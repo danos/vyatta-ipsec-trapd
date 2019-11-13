@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Copyright (c) 2019, AT&T Intellectual Property.
+# Copyright (c) 2015, Brocade Communications Systems, Inc.
+# All rights reserved.
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
+### BEGIN INIT INFO
+# Provides:		vyatta-ipsec-trapd
+# Required-Start:	$syslog $time $local_fs
+# Required-Stop:	$syslog $time $local_fs
+# Default-Start:
+# Default-Stop:		0 1 6
+# Short-Description:	IPsec Trapd
+# Description:		Debian init script for the IPsec trap daemon
+### END INIT INFO
+
+SCRIPT=$0
+NAME=${SCRIPT##*/}
+DESC=$NAME
+DAEMON=/opt/vyatta/sbin/ipsec-trapd.pl
+DAEMON_ARGS=
+USER=nobody
+GROUP=nogroup
+LOGFILE=/var/log/$NAME.log
+PIDFILE=/var/run/ipsec-trapd.pid
+
+# Exit if the package is not installed
+[ -x $DAEMON ] || exit 0
+
+# No configuration variable file
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present
+. /lib/lsb/init-functions
+
+#
+# Not reloadable
+#
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting $DESC" "$NAME"
+    if start-stop-daemon --start --quiet --exec $DAEMON --pidfile $PIDFILE -- --background --pidfile $PIDFILE; then
+      log_end_msg 0
+    else
+      log_end_msg 1
+    fi
+    ;;
+
+  stop)
+    log_daemon_msg "Stopping $DESC" "$NAME"
+    if start-stop-daemon --oknodo --stop --quiet --exec $DAEMON --pidfile $PIDFILE; then
+      log_end_msg 0
+    else
+      log_end_msg 1
+    fi
+    ;;
+
+  status)
+    status_of_proc -p $PIDFILE "$DAEMON" "$NAME" && exit 0 || exit $?
+    ;;
+
+  restart|force-reload)
+    log_action_begin_msg "Restarting $DESC" "$NAME"
+    start-stop-daemon --stop --quiet --exec $DAEMON --pidfile $PIDFILE || true
+    sleep 1
+    if start-stop-daemon --start --quiet --exec $DAEMON --pidfile $PIDFILE -- --background --pidfile $PIDFILE; then
+      log_end_msg 0
+    else
+      log_end_msg 1
+    fi
+    ;;
+
+  *)
+    echo "Usage: $SCRIPT {start|stop|status|restart|force-reload}" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+

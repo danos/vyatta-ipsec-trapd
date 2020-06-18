@@ -1,3 +1,12 @@
+vyatta-ipsec-trapd (0.0.14) unstable; urgency=medium
+
+  [ Daniel Gollub ]
+  * Align to latest xfrm monitor output
+
+  [ Charles (Chas) Williams ]
+
+ -- Charles (Chas) Williams <ciwillia@vyatta.att-mail.com>  Thu, 18 Jun 2020 16:50:56 -0400
+
 vyatta-ipsec-trapd (0.0.13) unstable; urgency=medium
 
   * DANOS Import master

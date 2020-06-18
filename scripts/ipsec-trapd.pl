@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # Copyright (c) 2015, Brocade Communications Systems, Inc.
-# Copyright (c) 2018, AT&T Intellectual Property.
+# Copyright (c) 2018, 2020, AT&T Intellectual Property.
 # All rights reserved.
 #
 # SPDX-License-Identifier: GPL-2.0-only
@@ -275,9 +275,9 @@ sub parse
     my $buffer = shift;
 
     # IKE key events, ignore
-    return if (substr($buffer, 0, 8) eq "Expired " || substr($buffer, 0, 8) eq "Updated ");
+    return if (substr($buffer, 0, 8) eq "Expired ");
 
-    $buffer =~ /src ([^ ]+) dst ([^ ]+) proto (ah|esp) spi (0x[0-9a-f]{8}) .* mode (tunnel|transport) /;
+    $buffer =~ /src ([^ ]+) dst ([^ ]+)\\.* proto (ah|esp) spi (0x[0-9a-f]{8}) .* mode (tunnel|transport)\\/;
     return unless (defined $1);
 
     my $sa = {};

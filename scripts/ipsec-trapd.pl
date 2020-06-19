@@ -277,7 +277,7 @@ sub parse
     # IKE key events, ignore
     return if (substr($buffer, 0, 8) eq "Expired ");
 
-    $buffer =~ /src ([^ ]+) dst ([^ ]+)\\.* proto (ah|esp) spi (0x[0-9a-f]{8}) .* mode (tunnel|transport)\\/;
+    $buffer =~ /src ([^ ]+) dst ([^ ]+) proto (ah|esp) spi (0x[0-9a-f]{8}) .* mode (tunnel|transport) /;
     return unless (defined $1);
 
     my $sa = {};

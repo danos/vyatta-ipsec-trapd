@@ -274,21 +274,40 @@ sub parse
 {
     my $buffer = shift;
 
-    # IKE key events, ignore
-    return if (substr($buffer, 0, 8) eq "Expired ");
+    $buffer =~ /
+        (?<mode>Expired|Deleted)?[ ]?
+        src\s(?<src>[^ ]+)\s
+        dst\s(?<dst>[^ ]+)\s
+        proto\s(?<proto>ah|esp)\s
+        spi\s(?<spi>0x[0-9a-f]{8})\s
+        .*\s
+        mode\s(?<mode>tunnel|transport)\s
+        .+?(:?hard\s(?<hardlimit>0|1)+)?$
+    /x;
 
-    $buffer =~ /src ([^ ]+) dst ([^ ]+) proto (ah|esp) spi (0x[0-9a-f]{8}) .* mode (tunnel|transport) /;
-    return unless (defined $1);
+    return unless (defined $+{src});
 
     my $sa = {};
+    my $deleted = 0;
 
-    $sa->{src} = $1;
-    $sa->{dst} = $2;
-    $sa->{proto} = $3;
-    $sa->{spi} = hex($4);
-    $sa->{mode} = $5;
-    $sa->{deleted} = (substr($buffer, 0, 8) eq "Deleted ") ? 1 : 0;
-    my $ifname = $sock->addr_to_interface($1);
+    if (defined $+{mode} and $+{mode} eq "Deleted") {
+        $deleted = 1;
+    # check for hardlimit expiry
+    } elsif (defined $+{hardlimit} and $+{hardlimit} eq "1") {
+        $deleted = 1;
+    # ignore softlimit expiry. Instead wait for a regular "Deleted" event.
+    } elsif (defined $+{hardlimit} and $+{hardlimit} eq "0") {
+        return;
+    }
+
+
+    $sa->{src} = $+{src};
+    $sa->{dst} = $+{dst};
+    $sa->{proto} = $+{proto};
+    $sa->{spi} = hex($+{spi});
+    $sa->{mode} = $+{mode};
+    $sa->{deleted} = $deleted;
+    my $ifname = $sock->addr_to_interface($+{src});
     $sa->{outbound} = defined $ifname ? 1 : 0;
 
     return $sa;

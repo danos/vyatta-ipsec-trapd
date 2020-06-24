@@ -1,3 +1,13 @@
+vyatta-ipsec-trapd (0.0.15) unstable; urgency=medium
+
+  [ Daniel Gollub ]
+  * Restore original match regex
+  * Use hardlimit Expiry to trigger SA deletion traps
+
+  [ Charles (Chas) Williams ]
+
+ -- Charles (Chas) Williams <ciwillia@vyatta.att-mail.com>  Wed, 24 Jun 2020 09:57:40 -0400
+
 vyatta-ipsec-trapd (0.0.14) unstable; urgency=medium
 
   [ Daniel Gollub ]
